@@ -85,12 +85,12 @@ export const loginUser = [
     try {
       const userExist = await User.findOne({ username });
       if (!userExist) {
-        return res.status(400).json({ message: "User does not exist" });
+        return res.status(400).json({ message: "invalid credentials" });
       }
 
       const isMatch = await comparePassword(password, userExist.password);
       if (!isMatch) {
-        return res.status(400).json({ message: "Invalid credentials" });
+        return res.status(400).json({ message: "invalid credentials" });
       }
 
       const token = jwt.sign({ id: userExist._id }, process.env.JWT_SECRET, {

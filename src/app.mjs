@@ -21,3 +21,7 @@ export default app;
 // super admin credentials
 // username: super_admin
 // password: $jetsyet34_
+
+// admin credentials
+// username: admin
+// password: !_retyd435

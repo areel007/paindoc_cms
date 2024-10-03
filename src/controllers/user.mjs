@@ -11,7 +11,7 @@ export const getUsers = async (req, res) => {
     const _users = users.map((user) => {
       return {
         id: user._id,
-        email: user.email,
+        username: user.username,
         role: user.role,
       };
     });
@@ -35,7 +35,7 @@ export const getUser = async (req, res) => {
       message: "User fetched successfully",
       user: {
         id: user._id,
-        email: user.email,
+        username: user.username,
         role: user.role,
       },
     });

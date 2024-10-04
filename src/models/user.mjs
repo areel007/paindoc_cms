@@ -15,6 +15,9 @@ const userSchema = new Schema({
     enum: ["super admin", "admin"],
     default: "admin",
   },
+  refreshToken: {
+    type: String,
+  },
 });
 
 export default model("User", userSchema);

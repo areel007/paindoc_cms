@@ -93,24 +93,81 @@ export const loginUser = [
         return res.status(400).json({ message: "invalid credentials" });
       }
 
-      const token = jwt.sign({ id: userExist._id }, process.env.JWT_SECRET, {
-        expiresIn: "1d",
-      });
+      const accessToken = jwt.sign(
+        { id: userExist._id },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: "1h",
+        }
+      );
+
+      const refreshToken = jwt.sign(
+        { id: userExist._id },
+        process.env.JWT_REFRESH_SECRET,
+        {
+          expiresIn: "1d",
+        }
+      );
+
+      userExist.refreshToken = refreshToken;
+      await userExist.save();
 
       const user = {
         _id: userExist._id,
         username: userExist.username,
         role: userExist.role,
+        accessToken,
+        refreshToken,
       };
 
       res.status(200).json({
         message: "Login successful",
-        token,
         user,
       });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Server error" });
+    }
+  },
+];
+
+// refresh token
+export const refreshToken = () => [
+  body("refreshToken").notEmpty().withMessage("refreshToken is required"),
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { refreshToken } = req.body;
+
+    try {
+      const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+      const user = await User.findById(decoded.id);
+      if (!user) {
+        return res.status(401).json({ message: "invalid credentials" });
+      }
+
+      if (user.refreshToken !== refreshToken) {
+        return res.status(401).json({ message: "invalid credentials" });
+      }
+
+      const accessToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: "15m",
+      });
+
+      res.status(200).json({
+        message: "refresh token successful",
+        user: {
+          _id: user._id,
+          username: user.username,
+          role: user.role,
+          accessToken,
+        },
+      });
+    } catch (error) {
+      res.status(500).json({ message: "failed to refresh token" });
     }
   },
 ];

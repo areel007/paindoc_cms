@@ -7,12 +7,7 @@ import {
 
 const router = Router();
 
-router
-  .route("/")
-  .get(authenticateUser, authorizeRoles("super admin"), getUsers);
-router
-  .route("/:id")
-  .get(getUser)
-  .delete(authenticateUser, authorizeRoles("super admin"), deleteUser);
+router.route("/").get(getUsers);
+router.route("/:id").get(getUser).delete(deleteUser);
 
 export default router;

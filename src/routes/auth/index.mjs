@@ -17,8 +17,6 @@ router.route("/register").post(registerUser);
 router.route("/login").post(loginUser);
 router.route("/refresh-token").post(refreshToken);
 
-router
-  .route("/change-password/:id")
-  .patch(authenticateUser, authorizeRoles("super admin"), changePassword);
+router.route("/change-password/:id").patch(changePassword);
 
 export default router;

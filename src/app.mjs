@@ -5,7 +5,7 @@ import bodyParser from "body-parser";
 
 // Allow requests from your frontend
 const corsOptions = {
-  origin: "https://paindocafrica.com", // Your frontend origin
+  origin: "*", // Your frontend origin
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Allowed HTTP methods
   credentials: true, // Allow credentials (cookies, authorization headers)
   optionsSuccessStatus: 204,
